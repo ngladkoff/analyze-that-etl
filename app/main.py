@@ -1,85 +1,18 @@
-from json.decoder import JSONDecodeError
-import firebase_admin
-from firebase_admin import credentials, firestore
-import json
+from user_interaction.input_numbers import ask_integer
+from etl.etl_factory import EtlFactory
 
-
-def create_data_obj():
-    data = {}
-    data['users'] = []
-    return data
-
-
-def get_db():
-    cred= credentials.Certificate('serviceAccountKey.json')
-    firebase_admin.initialize_app(cred)
-    db = firestore.client()
-    return db
-
-
-def import_scrum_game_data():
-    data = create_data_obj()
-    db = get_db()
-    collection = db.collection('users')
-
-    all_users = collection.stream()
-    for user in all_users:
-        print(user.id)
-        user_dict = user.to_dict()
-        user_collections = user.reference.collections()
-        for user_collection in user_collections:
-            if user_collection.id == 'levels':
-                user_dict['levels'] = []
-                for level in user_collection.stream():
-                    level_dict = level.to_dict()
-                    user_dict['levels'].append(level_dict)
-        data['users'].append(user_dict)
-
-    print("Guardando archivo")
-
-    with open("scrum.json", "w") as file:
-        json.dump(data, file)    
-
-    print("Proceso finalizado")
-
-
-def import_psycho_game_data():
-    data = create_data_obj()
-    db = get_db()
-    collection = db.collection('usersPsycho')
-
-    all_users = collection.stream()
-    for user in all_users:
-        print(user.id)
-        user_dict = user.to_dict()
-        # user_collections = user.reference.collections()
-        # for user_collection in user_collections:
-        #     if user_collection.id == 'levels':
-        #         user_dict['levels'] = []
-        #         for level in user_collection.stream():
-        #             level_dict = level.to_dict()
-        #             user_dict['levels'].append(level_dict)
-        data['users'].append(user_dict)
-
-    print("Guardando archivo")
-
-    with open("psycho.json", "w") as file:
-        json.dump(data, file)    
-
-    print("Proceso finalizado")
-
-
-
+SALIR = 0
 
 def main():
     option = 1
     while option != 0:
-        option = int(input("Ingrese opción [1-Scrum | 2-Psycho | 0-Salir]: "))
-        if option == 1:
-            import_scrum_game_data()
-        if option == 2:
-            import_psycho_game_data()
-    print("Adios")
+        option = ask_integer("Ingrese opción [1-Scrum | 2-Psico | 0-Salir]: ", 0, 2, "Ingrese un número mayor a 0", "Ingrese un número menor a 2")
+        if option == SALIR:
+            print("Adios")
+            return 0
+
+        etl = EtlFactory.create_etl('scrum' if 1 else 'psico')
+        etl.start()
 
 
 if __name__ == '__main__':
