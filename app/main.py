@@ -74,7 +74,7 @@ def import_psycho_game_data():
 def main():
     option = 1
     while option != 0:
-        option = int(input("Ingrese opción: [1-Scrum | 2-Psycho]"))
+        option = int(input("Ingrese opción [1-Scrum | 2-Psycho | 0-Salir]: "))
         if option == 1:
             import_scrum_game_data()
         if option == 2:
