@@ -1,15 +1,17 @@
-from etl.game_etl import GameEtl
-import json
+from typing import Dict
+from etl.data_extractor import DataExtractor
 from firebase.firebase_db import get_db
 
-class ScrumGameEtl(GameEtl):
+
+class ScrumFirebaseExtractor(DataExtractor):
 
     def create_data_obj(self):
         data = {}
         data['users'] = []
         return data
 
-    def start(self):
+    def extract(self) -> Dict:
+        print("ScrumFirebaseExtractor.extract")
         data = self.create_data_obj()
         db = get_db()
         collection = db.collection('users')
@@ -26,12 +28,4 @@ class ScrumGameEtl(GameEtl):
                         level_dict = level.to_dict()
                         user_dict['levels'].append(level_dict)
             data['users'].append(user_dict)
-
-        print("Guardando archivo")
-
-        with open("scrum.json", "w") as file:
-            json.dump(data, file)
-
-        print("Proceso finalizado")
-
-
+        return data

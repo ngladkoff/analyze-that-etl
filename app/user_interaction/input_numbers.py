@@ -1,5 +1,4 @@
 
-
 def ask_integer(message, valmin, valmax, min_err_msg, max_err_msg) -> int:
     while True:
         try:

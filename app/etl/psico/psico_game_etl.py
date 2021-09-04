@@ -1,15 +1,25 @@
 
+from etl.data_loader import DataLoader
+from etl.data_transformer import DataTransformer
+from etl.data_extractor import DataExtractor
 from etl.game_etl import GameEtl
 from firebase.firebase_db import get_db
 import json
 
+
 class PsicoGameEtl(GameEtl):
+
+    def __init__(self, extractor: DataExtractor,
+                 transformer: DataTransformer,
+                 loader: DataLoader):
+        self.extractor = extractor
+        self.transformer = transformer
+        self.loader = loader
 
     def create_data_obj(self):
         data = {}
         data['users'] = []
         return data
-
 
     def start(self):
         data = self.create_data_obj()
@@ -32,9 +42,6 @@ class PsicoGameEtl(GameEtl):
         print("Guardando archivo")
 
         with open("psico.json", "w") as file:
-            json.dump(data, file)    
+            json.dump(data, file)
 
         print("Proceso finalizado")
-
-
-
