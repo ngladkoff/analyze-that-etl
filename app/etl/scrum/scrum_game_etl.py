@@ -14,7 +14,6 @@ class ScrumGameEtl(GameEtl):
         self.transformer = transformer
         self.loader = loader
 
-
     def start(self):
         data = self.extractor.extract()
         data = self.transformer.transform(data)

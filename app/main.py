@@ -16,7 +16,8 @@ def main():
             print("Adios")
             return 0
 
-        etl = EtlFactory.create_etl('scrum' if 1 else 'psico', True)
+        etl = EtlFactory.create_etl('scrum' if option == 1
+                                    else 'psico', True, True)
         etl.start()
 
 
