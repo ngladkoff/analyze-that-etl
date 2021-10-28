@@ -9,7 +9,7 @@ class ScrumXApiTransformer(DataTransformer):
         xAPI = self.create_xApi_dict()
         for user in data['users']:
             xAPI['xps'].append(self.create_user_xp(user))
-            xAPI['xps'].extend(self.create_levels_xp(user))
+            # xAPI['xps'].extend(self.create_levels_xp(user))
         return xAPI
 
     def create_xApi_dict(self):
@@ -46,7 +46,7 @@ class ScrumXApiTransformer(DataTransformer):
             }
         }
 
-    def create_user_xp(self, user):
+    def create_levels_xp(self, user):
         xps = []
         for level in user['levels']:
             xp = {
